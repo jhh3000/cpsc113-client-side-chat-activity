@@ -16,6 +16,9 @@ console.log('You should see this log message in your console');
     // to the page).
     // 
     function updateDOM(startIndex){
+        for (var i=startIndex-1; i < chats.length; i++) {
+            $("#chats").append("<li>" + chats[i] + "</li>");
+        }
     }
 
     // TODO #3: Write a function that requests an array of new chats
@@ -27,6 +30,16 @@ console.log('You should see this log message in your console');
     // should call itself again after a one or two second delay.
     // 
     function fetchChatsFromServer(){
+        var index = chats.length + 1;
+        $.ajax({
+          type: "GET",
+          url: "/chats/" + index,
+          success: function(e) {
+              chats.push.apply(chats, e);
+              updateDOM(index);
+              setTimeout(function() { fetchChatsFromServer() }, 1000);
+          },
+        });
     }
     
 
@@ -36,6 +49,15 @@ console.log('You should see this log message in your console');
     // See `index.js` to see how that request will be handled.
     // 
     function sendChatMessage(message){
+        console.log(message);
+        $.ajax({
+          type: "POST",
+          url: "/chats/",
+          data: JSON.stringify({'message': message}),
+          dataType: "json",
+          success: function() { console.log("done") },
+          contentType: "application/json;charset=UTF-8",
+        });
     }
     
     // TODO #1: Add an event listener that listens for when a user
@@ -43,6 +65,10 @@ console.log('You should see this log message in your console');
     // function with the value of the text entered in the textbox.
     // 
     function startAcceptingUserChats(){
+        $("#submit").click(function(e) {
+           var message = $("#message").val();
+           sendChatMessage(message);
+        });
     }
     
     // This event is fired when all the content on the page
