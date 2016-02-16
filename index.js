@@ -54,8 +54,9 @@ app.post('/chats', function(req, res){
 // Start-up the application
 // 
 var port = process.env.PORT || 3000;
+var host = process.env.HOST || 'localhost';
 app.listen(port, function () {
-    var url = 'http://localhost:' + port;
+    var url = 'http://' + host + ':' + port;
     if (process.env.C9_HOSTNAME) {
         url = 'https://' + process.env.C9_HOSTNAME;
     }
